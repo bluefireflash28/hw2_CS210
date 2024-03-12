@@ -1,5 +1,7 @@
 import csv
+from collections import defaultdict
 
+#Problem 1.1
 def percentage_fire_above_level(fileName):
     total_fire_Count = 0  #take total amount of pokemon
     fire_Count = 0 #total amount of fire pokemon with level 40
@@ -15,5 +17,106 @@ def percentage_fire_above_level(fileName):
     with open('pokemon1.txt', 'w') as file_output:
         file_output.write(f"Percentage of fire type Pokemons at or above level 40 = {rounded_percentage}")
 
+#Problem 1.2 and 1.3
+def fill_missing_values(fileName):
+
+    #Problem 1.2
+    weakness_type_count = defaultdict(lambda: defaultdict(int))
+    with open(fileName, 'r') as file:
+        reader = csv.DictReader(file)
+        next(reader)
+        for row in reader:
+            if row['type'] != 'NaN':
+                weakness_type_count[row['weakness']][row['type']] += 1
+    
+    most_common_type = {}
+    for weakness, type_counts in weakness_type_count.items():
+        # Sort the type counts by count in descending order
+        sorted_types = sorted(type_counts.items(), key=lambda x: x[1], reverse=True)
+        # Get the most common type (first item in the sorted list)
+        most_common_type[weakness] = sorted_types[0][0]
+
+    #Problem 1.3
+    total_attack_above_40 = 0
+    total_defense_above_40 = 0
+    total_hp_above_40 = 0
+    count_attack_above_40 = 0
+    count_defense_above_40 = 0
+    count_hp_above_40 = 0
+    total_attack_below_40 = 0
+    total_defense_below_40 = 0
+    total_hp_below_40 = 0
+    count_attack_below_40 = 0
+    count_defense_below_40 = 0
+    count_hp_below_40 = 0
+
+    with open(fileName, 'r') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            if row['atk'] == 'NaN' or row['def'] == 'NaN' or row['hp'] == 'NaN':
+                continue
+
+            attack = float(row['atk'])
+            defense = float(row['def'])
+            hp = float(row['hp'])
+            level = float(row['level'])
+
+            if level > 40:
+                total_attack_above_40 += attack
+                total_defense_above_40 += defense
+                total_hp_above_40 += hp
+                count_attack_above_40 += 1
+                count_attack_above_40 += 1
+                count_hp_above_40 += 1
+            else:
+                total_attack_below_40 += attack
+                total_defense_below_40 += defense
+                total_hp_below_40 += hp
+                count_attack_below_40 += 1
+                count_defense_below_40 += 1
+                count_hp_below_40 += 1
+
+        average_attack_above_40 = total_attack_above_40 / count_attack_above_40 if  count_attack_above_40 != 0 else 0
+        average_defense_above_40 = total_defense_above_40 / count_attack_above_40 if count_defense_above_40 != 0 else 0
+        average_hp_above_40 = total_hp_above_40 / count_hp_above_40 if count_hp_below_40 != 0 else 0
+        average_attack_below_40 = total_attack_below_40 / count_attack_below_40 if count_attack_below_40 != 0 else 0
+        average_defense_below_40 = total_defense_below_40 / count_defense_below_40 if count_defense_below_40 != 0 else 0
+        average_hp_below_40 = total_hp_below_40 / count_hp_below_40 if count_hp_below_40 != 0 else 0
+
+        with open(fileName, 'r') as file:
+            reader = csv.DictReader(file)
+            next(reader)
+            data = list(reader)
+
+            for row in data:
+                if row['type'] == 'NaN' and row['weakness'] in most_common_type:
+                    row['type'] = most_common_type[row['weakness']]
+
+                if row['atk'] == 'NaN' or row['def'] == 'NaN' or row['hp'] == 'NaN':
+                    level = float(row['level'])
+                    if level > 40:
+                        if row['atk'] == 'NaN':
+                            row['atk'] = round(average_attack_above_40, 1)
+                        if row['def'] == 'NaN':
+                            row['def'] = round(average_defense_above_40, 1)
+                        if row['hp'] == 'NaN':
+                            row['hp'] = round(average_hp_above_40, 1)
+                    else:
+                        if row['atk'] == 'NaN':
+                            row['atk'] = round(average_attack_below_40, 1)
+                        if row['def'] == 'NaN':
+                            row['def'] = round(average_attack_below_40, 1)
+                        if row['hp'] == 'NaN':
+                            row['hp'] = round(average_hp_below_40, 1)
+        
+        with open('pokemonResult.csv', 'w', newline='') as file:
+            writer = csv.DictWriter(file, fieldnames=data[0].keys())
+            writer.writeheader()
+            writer.writerows(data)
+
+
+
 
 percentage_fire_above_level('pokemonTrain.csv')
+fill_missing_values('PokemonTrain.csv')
+
