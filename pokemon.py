@@ -105,7 +105,7 @@ def fill_missing_values(fileName):
                         if row['atk'] == 'NaN':
                             row['atk'] = round(average_attack_below_40, 1)
                         if row['def'] == 'NaN':
-                            row['def'] = round(average_attack_below_40, 1)
+                            row['def'] = round(average_defense_below_40, 1)
                         if row['hp'] == 'NaN':
                             row['hp'] = round(average_hp_below_40, 1)
         
@@ -114,9 +114,23 @@ def fill_missing_values(fileName):
             writer.writeheader()
             writer.writerows(data)
 
+def pokemon_type_personality_mapping(fileName):
+    types_personality_mapping = defaultdict(list)
+
+    with open(fileName, 'r') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            types_personality_mapping[row['type']].append(row['personality'])
+
+    with open('pokemon4.txt', 'w') as output:
+        output.write("Pokemon type to personality mapping:\n\n")
+        for key in types_personality_mapping:
+            values = ', '.join(types_personality_mapping[key])
+            output.write(f"{key}: {values}\n")
 
 
 
 percentage_fire_above_level('pokemonTrain.csv')
 fill_missing_values('PokemonTrain.csv')
+pokemon_type_personality_mapping('pokemonResult.csv')
 
