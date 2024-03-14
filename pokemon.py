@@ -15,7 +15,7 @@ def percentage_fire_above_level(fileName):
     percentage = (fire_Count / total_fire_Count) * 100 #gain the percentage
     rounded_percentage = round(percentage)
     with open('pokemon1.txt', 'w') as file_output:
-        file_output.write(f"Percentage of fire type Pokemons at or above level 40 = {rounded_percentage}")
+        file_output.write(f"Percentage of fire type Pokemons at or above level 40 = {rounded_percentage}") #final output for the first function
 
 #Problem 1.2 and 1.3
 def fill_missing_values(fileName):
@@ -115,35 +115,34 @@ def fill_missing_values(fileName):
             writer.writerows(data)
 
 def pokemon_type_personality_mapping(fileName):
+    #Problem 1.4
     types_personality_mapping = defaultdict(list)
 
     with open(fileName, 'r') as file:
         reader = csv.DictReader(file)
         for row in reader:
-            types_personality_mapping[row['type']].append(row['personality'])
+            types_personality_mapping[row['type']].append(row['personality']) #creates a dictionary where key is type and the values will be personality
 
     with open('pokemon4.txt', 'w') as output:
-        output.write("Pokemon type to personality mapping:\n\n")
+        output.write("Pokemon type to personality mapping:\n\n") #writing the output to the file
         for key in types_personality_mapping:
             values = ', '.join(types_personality_mapping[key])
-            output.write(f"{key}: {values}\n")
+            output.write(f"\t{key}: {values}\n")
             
 def average_hp_for_stage_3(fileName):
     count = 0
     total_hp = 0
 
     with open(fileName, 'r') as file:
-        reader = csv.DictReader(file)
+        reader = csv.DictReader(file) 
         for row in reader:
-            if float(row['stage']) == 3.0:
+            if float(row['stage']) == 3.0: #checks to see if the pokemon is at stage 3.0
                 total_hp += float(row['hp'])
                 count += 1
-    average = round(total_hp/count) if count != 0 else 0
+    average = round(total_hp/count) if count != 0 else 0 #calculates the average but checks for test case in case the count is 0
     with open("pokemon5.txt", 'w') as output:
-        output.write(f"Average hit point for Pokemons of stage 3.0 = {average}")
+        output.write(f"Average hit point for Pokemons of stage 3.0 = {average}") #return the output
     
-
-
 
 percentage_fire_above_level('pokemonTrain.csv')
 fill_missing_values('PokemonTrain.csv')

@@ -1,13 +1,13 @@
 Pokemon type to personality mapping:
 
-fire: docile, modest, gentle, bold, brave, brave, rash, naughty, impish, timid, naughty, bashful, impish, impish, hardy, jolly, hardy, lax
-fighting: lonely, serious, hasty, adamant, careful
-grass: sassy, naive, lonely, rash, bashful, quiet, gentle, docile, bold, impish, bold, quiet, quiet, calm, adamant, naive, mild
-normal: relaxed, quiet, calm, naughty, lax, brave, brave, serious, jolly
-fairy: impish, sassy, naughty
-rock: naughty, mild, bashful, docile, impish
-ground: gentle, quiet, hardy, bashful
-bug: careful
-water: hardy
-flying: impish
-electric: hardy
+	fire: docile, modest, gentle, bold, brave, brave, rash, naughty, impish, timid, naughty, bashful, impish, impish, hardy, jolly, hardy, lax
+	fighting: lonely, serious, hasty, adamant, careful
+	grass: sassy, naive, lonely, rash, bashful, quiet, gentle, docile, bold, impish, bold, quiet, quiet, calm, adamant, naive, mild
+	normal: relaxed, quiet, calm, naughty, lax, brave, brave, serious, jolly
+	fairy: impish, sassy, naughty
+	rock: naughty, mild, bashful, docile, impish
+	ground: gentle, quiet, hardy, bashful
+	bug: careful
+	water: hardy
+	flying: impish
+	electric: hardy
