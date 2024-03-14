@@ -127,10 +127,26 @@ def pokemon_type_personality_mapping(fileName):
         for key in types_personality_mapping:
             values = ', '.join(types_personality_mapping[key])
             output.write(f"{key}: {values}\n")
+            
+def average_hp_for_stage_3(fileName):
+    count = 0
+    total_hp = 0
+
+    with open(fileName, 'r') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            if float(row['stage']) == 3.0:
+                total_hp += float(row['hp'])
+                count += 1
+    average = round(total_hp/count) if count != 0 else 0
+    with open("pokemon5.txt", 'w') as output:
+        output.write(f"Average hit point for Pokemons of stage 3.0 = {average}")
+    
 
 
 
 percentage_fire_above_level('pokemonTrain.csv')
 fill_missing_values('PokemonTrain.csv')
 pokemon_type_personality_mapping('pokemonResult.csv')
+average_hp_for_stage_3("pokemonResult.csv")
 
