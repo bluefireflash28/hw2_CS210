@@ -6,11 +6,10 @@ import os
 #Part 1 Preprocessing
 
 #Step 1.1 Clean
-def clean(text):
-    
+def clean(file_text):
+    file_text = re.sub(r'\bhttps?://\S*', '', file_text) #removes the website link
     file_text = re.sub(r'[^\w\s]', '', file_text) #removes characters that are not words or whitespaces
     file_text = re.sub(r'\s+', ' ', file_text) #removes characters that are multiple whitepaces
-    file_text = re.sub(r'http[s]?://\S+', '', file_text) #removes the website link
     return file_text.lower() #makes all the text lowercase
     """
     text = re.sub(r'\b\d+\b', '', text)
@@ -49,8 +48,10 @@ def stem_words(file_text):
 def compute_term_frequency(document):
     tf = defaultdict(int)
     total_terms = len(document) #gets the amount of words
+    print(total_terms)
     for term in document:
         tf[term] += 1 /total_terms #gets the term frequency
+        #print(tf[term])
     return tf
 
 def compute_inverse_document_frequency(documents):
@@ -60,7 +61,7 @@ def compute_inverse_document_frequency(documents):
         for term in set(document):
             idf[term] += 1
     for term in idf:
-        idf[term] = math.log(total_documents / (idf[term] + 1)) + 1
+        idf[term] = math.log(total_documents / (idf[term])) + 1
     return idf
 
 def calculate_score(tf, idf):
@@ -71,7 +72,7 @@ def calculate_score(tf, idf):
     return tfidf
 
 def print_top_words(tfidf, document_name):
-    sorted_tfidf = sorted(tfidf.items(), key=lambda x: x[1], reverse=True) #make it go from highest to lowest
+    sorted_tfidf = sorted(tfidf.items(), key=lambda x: (-x[1], x[0])) #make it go from highest to lowest
     top_terms = sorted_tfidf[:5] #get the top 5
     output_file = "tfidf_" + document_name
     with open(output_file, "w") as file:
@@ -79,7 +80,7 @@ def print_top_words(tfidf, document_name):
         for i, (word, score) in enumerate(top_terms):
             if i > 0:
                 file.write(", ")
-            file.write(f"('{word}', {score})")
+            file.write(f"('{word}', {score})") #writes out the file
         file.write("]")
 
 #Main Preprocessing function
@@ -90,6 +91,7 @@ def preprocess():
             file_name = file_name.strip() #goes through every single file 
             with open(file_name, "r") as document: #calls all the functions
                 file_text = document.read()
+                #print(file_text)
                 cleaned_file_text = clean(file_text)
                 text_no_stopwords = remove_stopwords(cleaned_file_text, stopwords)
                 stemmed_text = stem_words(text_no_stopwords)
