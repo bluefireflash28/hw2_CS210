@@ -34,6 +34,7 @@ def date_format(data): #2
       row[column] = re.sub(r'(\d{2}).(\d{2}).(\d{4})', r'\2.\1.\3', str(row[column]))
 
 def missing_coordinates(data): #3
+  """
   province_coordinates = defaultdict(list)
   for row in data:
     if row['latitude'] != 'NaN' and row['longitude'] != 'NaN': #get all the latitudes and longitudes
@@ -50,6 +51,29 @@ def missing_coordinates(data): #3
       else:
         row['latitude'] = 'NaN'
         row['longitude'] = 'NaN'
+    """
+  latitude_province = defaultdict(list)
+  longitude_province = defaultdict(list)
+  for row in data:
+    if row['latitude'] != 'NaN':
+      latitude_province[row['province']].append((float(row['latitude'])))
+    if row['longitude'] != 'NaN':
+      longitude_province[row['province']].append((float(row['longitude'])))
+  for row in data:
+      if row['latitude'] == 'NaN':
+        province = row['province']
+        if latitude_province[province] is not None:
+          latitude_sum = sum(coordinate for coordinate in latitude_province[province])
+          row['latitude'] = round(latitude_sum / len(latitude_province[province]), 2)
+        else:
+           row['latitude'] = 'NaN'
+      if row['longitude'] == 'NaN':
+        province = row['province']
+        if longitude_province[province] is not None:
+          longitude_sum = sum(coordinate for coordinate in longitude_province[province])
+          row['longitude'] = round(longitude_sum / len(longitude_province[province]), 2)
+        else:
+          row['longitude'] = 'NaN'
   
 def missing_city(data):
   province_cities = defaultdict(list)

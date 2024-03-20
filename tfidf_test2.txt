@@ -1,0 +1,1 @@
+[('lorem', 0.04), ('ipsum', 0.04), ('latin', 0.04), ('popular', 0.03), ('classical', 0.03)]

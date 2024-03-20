@@ -1,7 +1,7 @@
 import csv
 from collections import defaultdict
 
-#Problem 1.1
+#Problem 1.1 (this is good)
 def percentage_fire_above_level(fileName):
     total_fire_Count = 0  #take total amount of pokemon
     fire_Count = 0 #total amount of fire pokemon with level 40
@@ -24,15 +24,15 @@ def fill_missing_values(fileName):
     weakness_type_count = defaultdict(lambda: defaultdict(int))
     with open(fileName, 'r') as file:
         reader = csv.DictReader(file) #creates a Dict Reader named reader. It reads each row of the CSV file as a dictionary where the keys are the column headers
-        next(reader) #skips the first row as it assumes the csv file contains a header row
+        #next(reader) #skips the first row as it assumes the csv file contains a header row
         for row in reader:
             if row['type'] != 'NaN': #checks whether the 'type' column of current row is not 'NaN'
-                weakness_type_count[row['weakness']][row['type']] += 1 #incremets the count off 'weakness' and 'type'
+                weakness_type_count[row['weakness']][row['type']] += 1 #increments the count off 'weakness' and 'type'
     dict(weakness_type_count)
     most_common_type = {}
     for weakness, type_counts in weakness_type_count.items():
-        print("Weakness", weakness)
-        print("Typecount", type_counts)
+        #print("Weakness", weakness)
+        #print("Typecount", type_counts)
         # Sort the type counts by count in descending order
         sorted_types = sorted(type_counts.items(), key=lambda x: x[1], reverse=True)
         # Get the most common type (first item in the sorted list)
@@ -57,7 +57,8 @@ def fill_missing_values(fileName):
         reader = csv.DictReader(file)
         #calculating all the averages
         for row in reader:
-            if row['atk'] == 'NaN' or row['def'] == 'NaN' or row['hp'] == 'NaN':
+            """
+            if row['atk'] == 'NaN' or row['def'] == 'NaN' or row['hp'] == 'NaN': #skips the entire line
                 continue
 
             attack = float(row['atk'])
@@ -70,28 +71,58 @@ def fill_missing_values(fileName):
                 total_defense_above_40 += defense
                 total_hp_above_40 += hp
                 count_attack_above_40 += 1
-                count_attack_above_40 += 1
+                count_defense_above_40 += 1
                 count_hp_above_40 += 1
-            else:
+            elif level <= 40:
                 total_attack_below_40 += attack
                 total_defense_below_40 += defense
                 total_hp_below_40 += hp
                 count_attack_below_40 += 1
                 count_defense_below_40 += 1
                 count_hp_below_40 += 1
+            """
+            if int(float(row['level'])) > 40:
+                if row['atk'] != 'NaN':
+                    total_attack_above_40 += float(row['atk'])
+                    count_attack_above_40 += 1
+                if row['def'] != 'NaN':
+                    total_defense_above_40 += float(row['def'])
+                    count_defense_above_40 += 1
+                if row['hp'] != 'NaN':
+                    total_hp_above_40 += float(row['hp'])
+                    count_hp_above_40 += 1
+           
+            elif int(float(row['level'])) <= 40:
+                if row['atk'] != 'NaN':
+                    total_attack_below_40 += float(row['atk'])
+                    count_attack_below_40 += 1
+                if row['def'] != 'NaN':
+                    total_defense_below_40 += float(row['def'])
+                    count_defense_below_40 += 1
+                if row['hp'] != 'NaN':
+                    total_hp_below_40 += float(row['hp'])
+                    count_hp_below_40 += 1
 
         
         #make sure to check to make sure no division by 0 errors
-        average_attack_above_40 = total_attack_above_40 / count_attack_above_40 if  count_attack_above_40 != 0 else 0
+        average_attack_above_40 = total_attack_above_40 / count_attack_above_40 if count_attack_above_40 != 0 else 0
         average_defense_above_40 = total_defense_above_40 / count_attack_above_40 if count_defense_above_40 != 0 else 0
-        average_hp_above_40 = total_hp_above_40 / count_hp_above_40 if count_hp_below_40 != 0 else 0
+        average_hp_above_40 = total_hp_above_40 / count_hp_above_40 if count_hp_above_40 != 0 else 0
         average_attack_below_40 = total_attack_below_40 / count_attack_below_40 if count_attack_below_40 != 0 else 0
         average_defense_below_40 = total_defense_below_40 / count_defense_below_40 if count_defense_below_40 != 0 else 0
         average_hp_below_40 = total_hp_below_40 / count_hp_below_40 if count_hp_below_40 != 0 else 0
+        print(average_attack_above_40)
+        print(average_defense_above_40)
+        print(average_hp_above_40)
 
+        print(average_attack_below_40)
+        print(average_defense_below_40)
+        print(average_hp_below_40)
+
+        
         with open(fileName, 'r') as file:
             reader = csv.DictReader(file)
-            next(reader)
+            #next(reader)
             data = list(reader)
 
             for row in data:
@@ -120,7 +151,7 @@ def fill_missing_values(fileName):
             writer.writeheader()
             writer.writerows(data)
 
-def pokemon_type_personality_mapping(fileName):
+def pokemon_type_personality_mapping(fileName): #(this is good)
     #Problem 1.4
     types_personality_mapping = defaultdict(list)
 
@@ -131,11 +162,11 @@ def pokemon_type_personality_mapping(fileName):
 
     with open('pokemon4.txt', 'w') as output:
         output.write("Pokemon type to personality mapping:\n\n") #writing the output to the file
-        for key in types_personality_mapping:
-            values = ', '.join(types_personality_mapping[key])
+        for key in sorted(types_personality_mapping.keys()):
+            values = ', '.join(sorted(types_personality_mapping[key]))
             output.write(f"\t{key}: {values}\n")
             
-def average_hp_for_stage_3(fileName):
+def average_hp_for_stage_3(fileName): #this is good
     count = 0
     total_hp = 0
 
@@ -148,11 +179,8 @@ def average_hp_for_stage_3(fileName):
     average = round(total_hp/count) if count != 0 else 0 #calculates the average but checks for test case in case the count is 0
     with open("pokemon5.txt", 'w') as output:
         output.write(f"Average hit point for Pokemons of stage 3.0 = {average}") #return the output
-    
-  
 
 percentage_fire_above_level('pokemonTrain.csv')
-fill_missing_values('PokemonTrain.csv')
+fill_missing_values('pokemonTrain.csv')
 pokemon_type_personality_mapping('pokemonResult.csv')
 average_hp_for_stage_3("pokemonResult.csv")
-
